@@ -1,7 +1,7 @@
 import time
 
-from utility.constante import MAX_RANG
-from exception.custom_exception import OutOfRange
+from src.exception.custom_exception import OutOfRange
+from src.utility.constante import MAX_RANG
 
 
 class DataCapture():

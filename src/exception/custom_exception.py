@@ -1,4 +1,4 @@
-from utility.constante import MAX_RANG
+from src.utility.constante import MAX_RANG
 
 
 class OutOfRange(Exception):
