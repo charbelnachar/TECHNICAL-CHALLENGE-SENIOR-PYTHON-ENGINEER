@@ -40,12 +40,12 @@ Clone the repo.
 Get into the created folder.
 
 # Run
-python src/main.py
+Run the command: python src/main.py
 
 # Unit Test
 
-python -m unittest unit_test/utility.py 
-python -m unittest unit_test/model.py 
+Run the command: python -m unittest unit_test/utility.py 
+Run the command: python -m unittest unit_test/model.py 
 
 
 
