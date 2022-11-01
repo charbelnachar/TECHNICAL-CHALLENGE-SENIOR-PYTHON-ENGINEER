@@ -1,5 +1,7 @@
 import time
+from abc import abstractmethod
 
+from src.exception.custom_exception import NegativeNumber
 from src.exception.custom_exception import OutOfRange
 from src.utility.constante import MAX_RANG
 
@@ -11,18 +13,49 @@ class DataCapture():
         self.list_dic = {}
         self.len_dic = 0
 
-    def get_list_number(self):
-        return  self.list_number
 
-    def get_list_dic(self):
+
+    def get_list_number(self) -> list:
+        """returns the list of numbers after being processed from the dic
+                          :param None.
+                          :returns:  list of numbers processed from dec
+                          :rtype: List
+                          """
+        return self.list_number
+
+    def get_list_dic(self) -> list:
+        """returns the list of dict
+                                  :param None.
+                                  :returns:  list of dict
+                                  :rtype: List
+                                  """
         return self.list_dic
 
-    def get_len_dic(self):
+    def get_len_dic(self) -> int:
+        """returns len of dic
+                                  :param None.
+                                  :returns:  len of dict
+                                  :rtype: int
+                                  """
         return self.len_dic
 
 
-    def add(self, number) -> None :
-        # adds the values to the dictionary and sums the quantity
+    def add(self, number:int) -> None :
+        """Adds the values to the dictionary and sums the quantity
+            :param int num1: First number to add.
+            :returns:  None.
+            :rtype: None
+            :raises OutOfRange: the maximum number of values to be added is passed.
+            :raises NegativeNumber: the aggregate number is negative and must be positive.
+            """
+        try:
+            number = int(number)
+        except ValueError:
+            raise ValueError
+
+        if number<0:
+            raise NegativeNumber
+
         if number in self.list_dic:
             self.list_dic[number]["repeat"] += 1
         else:
@@ -40,12 +73,14 @@ class DataCapture():
             raise OutOfRange
 
 
-    def sorted_dic_to_list(self) -> None:
-        # sort and return a list of numbers
-        self.list_number =  sorted(self.list_dic)
+    def build_stats(self) -> "Stats":
+        """Generates statistics
+                    :param : None
+                    :returns:  object type stats where they have the methods to handle the information .
+                    :rtype: Stats
+        """
 
-    def build_stats(self) -> "self objetc":
-        # generates statistics 
+        self.list_number = sorted(self.list_dic)
         aux_greater = self.len_dic
         aux_less = 0
         for value in self.list_number:
@@ -53,17 +88,53 @@ class DataCapture():
             self.list_dic[value]["less"] = aux_less
             self.list_dic[value]["greater"] = aux_greater
             aux_less = self.list_dic[value]["repeat"] + aux_less
-        return self
 
-    def less(self, numb) -> int:
-        # returns the number of numbers less than the value passed in
+        stats = Stats(self.list_dic)
+        return stats
+
+
+class Stats():
+
+    def __init__(self,list_dic = None):
+        if list_dic != None :
+            self.list_dic = list_dic
+        else:
+            self.list_dic = {}
+
+
+    def less(self, numb:int) -> int:
+        """returns the number of numbers less than the value passed in
+                    :param int numb: number to check in the statistics.
+                    :returns:  number of values less than numb.
+                    :rtype: Int
+                    :raises KeyError: the value is not in the list.
+                    """
+
         return  self.list_dic[numb]["less"]
 
-    def greater(self, numb) -> int:
+    def greater(self, numb:int) -> int:
+        """returns the number of numbers greater than the value passed in
+                          :param int numb: number to check in the statistics.
+                          :returns:  number of values greater than numb.
+                          :rtype: Int
+                          :raises KeyError: the value is not in the list.
+                          """
+
         # returns the number of numbers greater than the value passed in
         return self.list_dic[numb]["greater"]
 
-    def between(self, numb, numb2) -> int :
-        # returns the number of numbers that belong to the passed range
-        return self.len_dic - self.list_dic[numb]["less"] - self.list_dic[numb2]["greater"]
+    def between(self, numb:int, numb2:int) -> int :
+        """returns the number of numbers that belong to the passed range
+                          :param int numb: number to check in the statistics.
+                          :param int numb2: number to check in the statistics.
+                          :returns: returns the number of numbers between numb and numb2.
+                          :rtype: Int
+                          :raises KeyError: the value is not in the list.
+                          """
+        if numb < numb2:
+            min, max = numb, numb2
+        else:
+            min, max = numb2, numb
+
+        return self.len_dic - self.list_dic[min]["less"] - self.list_dic[max]["greater"]
 
