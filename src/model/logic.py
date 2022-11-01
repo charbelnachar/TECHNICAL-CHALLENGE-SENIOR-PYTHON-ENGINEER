@@ -101,6 +101,7 @@ class Stats():
             self.len_dic = len_dic
         else:
             self.list_dic = {}
+            self.len_dic = 0
 
 
     def less(self, numb:int) -> int:
