@@ -44,8 +44,7 @@ Run the command: python src/main.py
 
 # Unit Test
 
-Run the command: python -m unittest unit_test/utility.py 
-Run the command: python -m unittest unit_test/model.py 
+Run the command: python -m unittest unit_test/test_model.py 
 
 
 
