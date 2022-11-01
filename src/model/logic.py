@@ -89,15 +89,16 @@ class DataCapture():
             self.list_dic[value]["greater"] = aux_greater
             aux_less = self.list_dic[value]["repeat"] + aux_less
 
-        stats = Stats(self.list_dic)
+        stats = Stats(self.list_dic,self.len_dic)
         return stats
 
 
 class Stats():
 
-    def __init__(self,list_dic = None):
-        if list_dic != None :
+    def __init__(self,list_dic = None ,len_dic = None):
+        if list_dic != None and len_dic != None :
             self.list_dic = list_dic
+            self.len_dic = len_dic
         else:
             self.list_dic = {}
 
