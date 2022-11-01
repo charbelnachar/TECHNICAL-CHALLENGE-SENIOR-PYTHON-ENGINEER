@@ -1,5 +1,3 @@
-import time
-from abc import abstractmethod
 
 from src.exception.custom_exception import NegativeNumber
 from src.exception.custom_exception import OutOfRange
@@ -7,11 +5,23 @@ from src.utility.constante import MAX_RANG
 
 
 class DataCapture():
+    """DataCapture class constructor
+                                """
     def __init__(self) -> None:
         # constructor that initializes the object and its variables
         self.list_number = []
         self.list_dic = {}
         self.len_dic = 0
+        for num in range(1,MAX_RANG):
+
+            data = {
+                    "less"   : 0,
+                    "greater": 0,
+                    "repeat" : 0
+                    }
+            self.list_dic[num] = data
+
+
 
 
 
@@ -41,10 +51,12 @@ class DataCapture():
 
 
     def add(self, number:int) -> None :
-        """Adds the values to the dictionary and sums the quantity
+        """
+        Adds the values to the dictionary and sums the quantity
+
             :param int num1: First number to add.
             :returns:  None.
-            :rtype: None
+            :rtype: None.
             :raises OutOfRange: the maximum number of values to be added is passed.
             :raises NegativeNumber: the aggregate number is negative and must be positive.
             """
@@ -56,25 +68,18 @@ class DataCapture():
         if number<0:
             raise NegativeNumber
 
-        if number in self.list_dic:
-            self.list_dic[number]["repeat"] += 1
-        else:
-            data = {
-                    "less":0,
-                    "greater":0,
-                    "repeat":1
-                    }
-            self.list_dic[number]=data
-        self.len_dic += 1
+        if number <= MAX_RANG:
 
-        if self.len_dic <= MAX_RANG:
-            self.list_number.append(number)
+            self.list_dic[number]["repeat"] += 1
+            self.len_dic += 1
         else:
             raise OutOfRange
 
 
+
+
     def build_stats(self) -> "Stats":
-        """Generates statistics
+        """Generates statistics.
                     :param : None
                     :returns:  object type stats where they have the methods to handle the information .
                     :rtype: Stats
@@ -85,7 +90,7 @@ class DataCapture():
         aux_less = 0
         for value in self.list_number:
             aux_greater = aux_greater - self.list_dic[value]["repeat"]
-            self.list_dic[value]["less"] = aux_less
+            self.list_dic[value]["less"] =aux_less
             self.list_dic[value]["greater"] = aux_greater
             aux_less = self.list_dic[value]["repeat"] + aux_less
 
@@ -96,6 +101,9 @@ class DataCapture():
 class Stats():
 
     def __init__(self,list_dic = None ,len_dic = None):
+        """Stats class constructor
+                            :param int numb: number to check in the statistics.
+                            """
         if list_dic != None and len_dic != None :
             self.list_dic = list_dic
             self.len_dic = len_dic
@@ -122,7 +130,6 @@ class Stats():
                           :raises KeyError: the value is not in the list.
                           """
 
-        # returns the number of numbers greater than the value passed in
         return self.list_dic[numb]["greater"]
 
     def between(self, numb:int, numb2:int) -> int :
