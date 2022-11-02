@@ -4,7 +4,7 @@ from src.utility.constante import MAX_RANG
 class OutOfRange(Exception):
 
     def __init__(self):
-        self.message = f"the list has more than {MAX_RANG} items "
+        self.message = f"the value does not fall within the range of 1 to  {MAX_RANG} "
         super().__init__(self.message)
 
 class NegativeNumber(Exception):
