@@ -21,37 +21,8 @@ class TestModelDataCapture(unittest.TestCase):
         data = DataCapture()
         self.assertIsInstance(data, DataCapture)
 
-    import unittest
 
-    class TestDictionaryStructure(unittest.TestCase):
-        def test_dictionary_structure(self):
-            """
-            Verify if the structure of a dictionary is consistent across all its values.
 
-            This test ensures that the structure of a dictionary, such as 'DataCapture's list_dic', remains the same for all its values.
-
-            Test steps:
-            1. Define the expected structure for each value in the dictionary as 'expected_structure'.
-            2. Create an example dictionary ('example_dictionary') with key-value pairs using DataCapture's list_dic.
-            3. Iterate through the dictionary and compare the structure of each value with the 'expected_structure'.
-            4. If a value has a different structure, the test will fail, indicating a structure mismatch.
-
-            Expected results:
-            1. The test should pass if the structure of all values in the dictionary matches the 'expected_structure'.
-            """
-            # Define the expected structure for each value in the dictionary
-            expected_structure = {'less': 0, 'greater': 0, 'repeat': 0}
-
-            data = DataCapture()
-
-            # Use DataCapture's list_dic as the example dictionary to be tested
-            example_dictionary = data.get_list_dic()
-
-            for key, value in example_dictionary.items():
-                self.assertEqual(value, expected_structure)
-
-    if __name__ == '__main__':
-        unittest.main()
 
     def test_default_value(self):
         """
@@ -68,9 +39,8 @@ class TestModelDataCapture(unittest.TestCase):
         2. The list of dictionaries should be an empty dictionary, the list of numbers should be an empty list, and the length of the dictionary should be 0.
         """
         data = DataCapture()
-        self.assertEqual(type(data.get_list_dic()), dict)
-        self.assertEqual(type(data.get_list_number()), list)
-        self.assertEqual(data.get_len_dic(), 0)
+        self.assertEqual(type(data.list_dic), dict)
+        self.assertEqual(data.len_dic, 0)
 
     def test_add(self):
         """
@@ -91,8 +61,7 @@ class TestModelDataCapture(unittest.TestCase):
         data = DataCapture()
         numb = 5
         data.add(numb)
-        list_dic = data.get_list_dic()
-        self.assertTrue(numb in list_dic)
+        self.assertTrue(numb in data.list_dic)
 
     def test_add_error_raise(self):
         """
@@ -107,9 +76,7 @@ class TestModelDataCapture(unittest.TestCase):
 
         Expected results:
         1. The 'add' method should raise a ValueError because the input is not an integer.
-        2. The 'add' method should raise a NegativeNumber exception because the input is a negative number.
-        3. The 'add' method should raise an OutOfRange exception because the input exceeds the maximum allowed range.
-        """
+         """
         data = DataCapture()
         numb = "a"
         with self.assertRaises(ValueError):
@@ -169,8 +136,7 @@ class TestModelDataCapture(unittest.TestCase):
         numb = 5
         data.add(numb)
         data.add(numb)
-        list_dic = data.get_list_dic()
-        self.assertEqual(list_dic[numb]["repeat"], 2)
+        self.assertEqual(data.list_dic[numb]["repeat"], 2)
 
     def test_add_len_dic(self):
         """
@@ -189,10 +155,9 @@ class TestModelDataCapture(unittest.TestCase):
         3. The length of DataCapture should be 2.
         """
         data = DataCapture()
-        numb = 5
-        data.add(numb)
-        data.add(numb)
-        self.assertEqual(data.get_len_dic(), 2)
+        data.add(4)
+        data.add(5)
+        self.assertEqual(data.len_dic, 2)
 
     def test_build_stats_return(self):
         """
@@ -229,11 +194,11 @@ class TestModelDataCapture(unittest.TestCase):
         3. Each dictionary should have 'less', 'greater', and 'repeat' as integer keys.
         """
         data = DataCapture()
-        list_dict = data.get_list_dic()
-        for numb in list_dict:
-            self.assertIsInstance(list_dict[numb]["less"], int)
-            self.assertIsInstance(list_dict[numb]["greater"], int)
-            self.assertIsInstance(list_dict[numb]["repeat"], int)
+        data.build_stats()
+        for numb in  data.list_dic:
+            self.assertIsInstance(data.list_dic[numb]["less"], int)
+            self.assertIsInstance(data.list_dic[numb]["greater"], int)
+            self.assertIsInstance(data.list_dic[numb]["repeat"], int)
 
 class TestModelStats(unittest.TestCase):
     def initial_data_test(self):

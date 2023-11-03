@@ -37,9 +37,6 @@ class DataCapture():
 
     def __init__(self) -> None:
         # constructor that initializes the object and its variables
-        # self.list_number = {}
-        # self.list_dic = {num: {"less": 0, "greater": 0, "repeat": 0} for num in range(1, MAX_RANG)}
-        # self.len_dic = 0
         self.list_dic = {}
         self.len_dic = 0
 
@@ -62,7 +59,8 @@ class DataCapture():
             self.list_dic[number]["repeat"] += 1
         else:
             self.list_dic[number] = {"less": 0, "greater": 0, "repeat": 1}
-            self.len_dic += 1
+
+        self.len_dic += 1
 
     def build_stats(self) -> "Stats":
         """
@@ -81,13 +79,14 @@ class DataCapture():
 
         for number in range(1, MAX_RANG + 1):
             data = self.list_dic.get(number, {"less": 0, "greater": 0, "repeat": 0})
+            aux_greater = aux_greater - data["repeat"]
             stats.list_dic[number] = {
                     "less"   : aux_less,
                     "greater": aux_greater,
-                    "repeat" : data["repeat"]
                     }
-            aux_greater -= data["repeat"]
-            aux_less += data["repeat"]
+            aux_less = data["repeat"] + aux_less
+            # aux_greater -= data["repeat"]
+            # aux_less += data["repeat"]
 
         stats.len_dic = self.len_dic
 
@@ -151,4 +150,5 @@ class Stats():
         else:
             min, max = numb2, numb
 
-        return self.len_dic - self.list_dic[min]["less"] - self.list_dic[max]["greater"]
+
+        return (self.len_dic) - self.list_dic[min]["less"] - self.list_dic[max]["greater"]
