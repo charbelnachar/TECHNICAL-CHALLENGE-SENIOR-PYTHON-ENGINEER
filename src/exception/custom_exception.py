@@ -12,3 +12,4 @@ class NegativeNumber(Exception):
     def __init__(self,number):
         self.message = f"{number} is negative and must be positive"
         super().__init__(self.message)
+

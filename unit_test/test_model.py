@@ -21,9 +21,6 @@ class TestModelDataCapture(unittest.TestCase):
         data = DataCapture()
         self.assertIsInstance(data, DataCapture)
 
-
-
-
     def test_default_value(self):
         """
         Test default values after initializing DataCapture.
@@ -116,6 +113,9 @@ class TestModelDataCapture(unittest.TestCase):
         with self.assertRaises(OutOfRange):
             data.add(numb)
 
+
+
+
     def test_add_repeat(self):
         """
         Test counting repeated numbers in DataCapture.
@@ -201,29 +201,68 @@ class TestModelDataCapture(unittest.TestCase):
             self.assertIsInstance(data.list_dic[numb]["repeat"], int)
 
 class TestModelStats(unittest.TestCase):
+
+    def count_numbers_less_greater_between(self,type,num, num2 = None):
+        """
+           Counts the number of numbers that meet the specified criteria in a list.
+
+           :param type: An integer representing the type of comparison to perform (1 for 'less', 2 for 'greater', 3 for 'between').
+           :param num: The value to use as a comparison threshold.
+           :param num2: Optional. A second value used for 'between' comparison. Default is None.
+           :returns: The number of numbers in the list that match the specified comparison criteria.
+           :rtype: int
+           """
+
+        if type == 1:
+           result =  len([number for number in self.aux_list if number < num])
+        elif type == 2:
+            result = len([number for number in self.aux_list if number > num])
+        elif type == 3 and num2 is not None :
+            result = len([number for number in self.aux_list if num <= number <= num2])
+
+        return result
+
+
+
+
     def initial_data_test(self):
         """
-        Initialize DataCapture with test data.
+    Initialize DataCapture with test data.
 
-        This method initializes an instance of DataCapture with test data for use in other test methods.
+    This method initializes an instance of DataCapture with test data for use in other test methods.
+
+    Test case:
+    1. Create an instance of DataCapture.
+    2. Add several numbers to the instance.
+    3. Call the 'build_stats' method to generate statistics.
+
+    Expected result:
+    1. An instance of DataCapture should be created.
+    2. Test data numbers (3, 3, 4, 6, 9, and 10) should be added to the instance.
+    3. Statistics for the test data should be generated.
+    """
+        self.aux_list = [3,3,4,6,9,10]
+        capture = DataCapture()
+        for num in self.aux_list:
+            capture.add(num)
+
+        return capture.build_stats()
+
+    def test_not_in_list_raise(self):
+        """
+       this method tests the behavior when querying a value that is not in the dict
 
         Test case:
-        1. Create an instance of DataCapture.
-        2. Add several numbers to the instance.
-        3. Call the 'build_stats' method to generate statistics.
+        1. Attempt search for those less than the value.
 
         Expected result:
-        1. An instance of DataCapture should be created.
-        2. Test data numbers (3, 9, 3, 4, and 6) should be added to the instance.
-        3. Statistics for the test data should be generated.
+        1. The 'less' method should raise an KeyError exception because  the value to be added is not in the dict .
         """
-        capture = DataCapture()
-        capture.add(3)
-        capture.add(9)
-        capture.add(3)
-        capture.add(4)
-        capture.add(6)
-        return capture.build_stats()
+        num = 100
+        stats = self.initial_data_test()
+        with self.assertRaises(KeyError):
+            less_value = stats.less(num)
+
 
     def test_less(self):
         """
@@ -241,29 +280,14 @@ class TestModelStats(unittest.TestCase):
         2. An instance of Stats should be created with the test data.
         3. The 'less' method should return the number of values less than the specified value (e.g., 2 for 4).
         """
+
+        num = 4
         stats = self.initial_data_test()
-        less_value = stats.less(4)
-        self.assertEqual(less_value, 2)
+        less_value = stats.less(num)
+        less_value_func = self.count_numbers_less_greater_between(1,num)
+        self.assertEqual(less_value, less_value_func)
 
-    def test_less_not_value_in_data_add(self):
-        """
-        Test the 'less' method with a value not in the data.
 
-        This method tests the 'less' method in the Stats class with a value that is not present in the test data.
-
-        Test case:
-        1. Initialize DataCapture with test data.
-        2. Create an instance of Stats using the test data.
-        3. Call the 'less' method with a specific value (e.g., 5).
-
-        Expected result:
-        1. DataCapture should be initialized with test data.
-        2. An instance of Stats should be created with the test data.
-        3. The 'less' method should return the number of values less than the specified value (e.g., 3 for 5), even if the value is not in the test data.
-        """
-        stats = self.initial_data_test()
-        less_value = stats.less(5)
-        self.assertEqual(less_value, 3)
 
     def test_greater(self):
         """
@@ -281,29 +305,14 @@ class TestModelStats(unittest.TestCase):
         2. An instance of Stats should be created with the test data.
         3. The 'greater' method should return the number of values greater than the specified value (e.g., 2 for 4).
         """
+
+        num = 4
         stats = self.initial_data_test()
-        greater_value = stats.greater(4)
-        self.assertEqual(greater_value, 2)
+        less_value = stats.greater(num)
+        less_value_func = self.count_numbers_less_greater_between(2, num)
+        self.assertEqual(less_value, less_value_func)
 
-    def test_greater_not_in_data_add(self):
-        """
-        Test the 'greater' method with a value not in the data.
 
-        This method tests the 'greater' method in the Stats class with a value that is not present in the test data.
-
-        Test case:
-        1. Initialize DataCapture with test data.
-        2. Create an instance of Stats using the test data.
-        3. Call the 'greater' method with a specific value (e.g., 10).
-
-        Expected result:
-        1. DataCapture should be initialized with test data.
-        2. An instance of Stats should be created with the test data.
-        3. The 'greater' method should return 0 because the specified value (e.g., 10) is not in the test data.
-        """
-        stats = self.initial_data_test()
-        greater_value = stats.greater(10)
-        self.assertEqual(greater_value, 0)
 
     def test_between(self):
         """
@@ -321,9 +330,12 @@ class TestModelStats(unittest.TestCase):
         2. An instance of Stats should be created with the test data.
         3. The 'between' method should return the number of values between the specified range (e.g., 4).
         """
+        numb = 3
+        numb2 = 9
         stats = self.initial_data_test()
-        greater_value = stats.between(3, 6)
-        self.assertEqual(greater_value, 4)
+        between_value = stats.between(numb, numb2)
+        aux_between_value = self.count_numbers_less_greater_between(3,numb,numb2)
+        self.assertEqual(between_value, aux_between_value)
 
     def test_between_reversed_range(self):
         """
@@ -344,6 +356,15 @@ class TestModelStats(unittest.TestCase):
         stats = self.initial_data_test()
         greater_value = stats.between(6, 3)
         self.assertEqual(greater_value, 4)
+
+        numb = 9
+        numb2 = 3
+        stats = self.initial_data_test()
+        between_value = stats.between(numb, numb2)
+        aux_between_value= self.count_numbers_less_greater_between(3, numb2, numb)
+        self.assertEqual(between_value, aux_between_value)
+
+
 
 if __name__ == '__main__':
     unittest.main()
