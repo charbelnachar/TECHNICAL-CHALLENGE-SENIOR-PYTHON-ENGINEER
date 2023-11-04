@@ -113,9 +113,6 @@ class TestModelDataCapture(unittest.TestCase):
         with self.assertRaises(OutOfRange):
             data.add(numb)
 
-
-
-
     def test_add_repeat(self):
         """
         Test counting repeated numbers in DataCapture.
