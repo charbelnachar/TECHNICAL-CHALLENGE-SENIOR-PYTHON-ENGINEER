@@ -3,7 +3,7 @@ from src.exception.custom_exception import OutOfRange
 from src.utility.constante import MAX_RANG
 
 
-def valid_number(number):
+def valid_number(number, list = None):
     """
 
        This method validates the input number.
@@ -14,6 +14,7 @@ def valid_number(number):
        :raises ValueError: If the provided value is not a valid integer.
        :raises OutOfRange: If the number exceeds the maximum allowed range (MAX_RANG).
        :raises NegativeNumber: If the number is negative, it must be positive.
+       :raises KeyError: If number not found in the list.
        """
 
     try:
@@ -21,8 +22,15 @@ def valid_number(number):
     except ValueError:
         raise ValueError(f'{number} is not a valid number')
 
+    if list is not None:
+        try:
+            list[number]
+        except KeyError:
+            raise KeyError(f'{number} is not found in the list')
+
     if number < 0:
         raise NegativeNumber(number)
+
 
     if number <= MAX_RANG:
         return number
@@ -53,6 +61,7 @@ class DataCapture():
             :raises ValueError: The provided value is not a valid number
             :raises OutOfRange: the maximum number of values to be added is passed.
             :raises NegativeNumber: the aggregate number is negative and must be positive.
+            :raises KeyError: If number not found in the list
             """
         number = valid_number(number)
         if number in self.list_dic:
@@ -76,8 +85,8 @@ class DataCapture():
 
         aux_greater = self.len_dic
         aux_less = 0
-
-        for number in range(1, MAX_RANG + 1):
+        self.list_number = sorted(self.list_dic)
+        for number in  self.list_number:
             data = self.list_dic.get(number, {"less": 0, "greater": 0, "repeat": 0})
             aux_greater = aux_greater - data["repeat"]
             stats.list_dic[number] = {
@@ -85,8 +94,6 @@ class DataCapture():
                     "greater": aux_greater,
                     }
             aux_less = data["repeat"] + aux_less
-            # aux_greater -= data["repeat"]
-            # aux_less += data["repeat"]
 
         stats.len_dic = self.len_dic
 
@@ -114,9 +121,11 @@ class Stats():
                     :raises ValueError: The provided value is not a valid number
                     :raises OutOfRange: the maximum number of values to be added is passed.
                     :raises NegativeNumber: the aggregate number is negative and must be positive.
+                    :raises KeyError: If number not found in the list
 
                     """
-        valid_number(numb)
+        valid_number(numb,self.list_dic)
+
         return self.list_dic[numb]["less"]
 
     def greater(self, numb: int) -> int:
@@ -127,9 +136,10 @@ class Stats():
             :raises ValueError: The provided value is not a valid number
             :raises OutOfRange: the maximum number of values to be added is passed.
             :raises NegativeNumber: the aggregate number is negative and must be positive.
+            :raises KeyError: If number not found in the list
 
                           """
-        valid_number(numb)
+        valid_number(numb ,self.list_dic)
         return self.list_dic[numb]["greater"]
 
     def between(self, numb: int, numb2: int) -> int:
@@ -141,10 +151,11 @@ class Stats():
                           :raises ValueError: The provided value is not a valid number
                           :raises OutOfRange: the maximum number of values to be added is passed.
                           :raises NegativeNumber: the aggregate number is negative and must be positive.
+                          :raises KeyError: If number not found in the list
 
                           """
-        valid_number(numb)
-        valid_number(numb2)
+        valid_number(numb, self.list_dic)
+        valid_number(numb2, self.list_dic)
         if numb < numb2:
             min, max = numb, numb2
         else:
