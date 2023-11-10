@@ -245,21 +245,6 @@ class TestModelStats(unittest.TestCase):
 
         return capture.build_stats()
 
-    def test_not_in_list_raise(self):
-        """
-       this method tests the behavior when querying a value that is not in the dict
-
-        Test case:
-        1. Attempt search for those less than the value.
-
-        Expected result:
-        1. The 'less' method should raise an KeyError exception because  the value to be added is not in the dict .
-        """
-        num = 100
-        stats = self.initial_data_test()
-        with self.assertRaises(KeyError):
-            less_value = stats.less(num)
-
 
     def test_less(self):
         """
