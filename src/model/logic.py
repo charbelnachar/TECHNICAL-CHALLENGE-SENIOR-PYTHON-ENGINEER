@@ -47,6 +47,14 @@ class DataCapture():
         # constructor that initializes the object and its variables
         self.list_dic = {}
         self.len_dic = 0
+        for num in range(1, MAX_RANG):
+
+            data = {
+                    "less"   : 0,
+                    "greater": 0,
+                    "repeat" : 0
+                    }
+            self.list_dic[num] = data
 
     def add(self, number: int) -> None:
         """
@@ -85,8 +93,7 @@ class DataCapture():
 
         aux_greater = self.len_dic
         aux_less = 0
-        self.list_number = sorted(self.list_dic)
-        for number in  self.list_number:
+        for number in range(1, MAX_RANG + 1):
             data = self.list_dic.get(number, {"less": 0, "greater": 0, "repeat": 0})
             aux_greater = aux_greater - data["repeat"]
             stats.list_dic[number] = {
